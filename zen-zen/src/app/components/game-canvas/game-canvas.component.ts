@@ -103,13 +103,13 @@ export class GameCanvasComponent implements AfterViewInit, OnDestroy {
   
   // Inside-out particle system
   private particles: ZenParticle[] = [];
-  private readonly maxParticles = 2000;
+  private readonly maxParticles = 100; // Reducido de 2000 a 100 para mejor rendimiento
   
   // Sistema de espiral interactivo mejorado
   private spiralConfig = {
     centerX: this.canvasWidth / 2,
     centerY: this.canvasHeight / 2,
-    maxParticles: 2500,
+    maxParticles: 200, // Reducido de 2500 a 200 para mejor rendimiento
     minRadius: 5,
     maxRadius: 250,
     baseSpeed: 0.5,
@@ -149,21 +149,14 @@ export class GameCanvasComponent implements AfterViewInit, OnDestroy {
   }
   
   ngAfterViewInit(): void {
-    console.log('🚀 GameCanvasComponent inicializado');
-    console.log('Canvas width:', this.canvasWidth, 'height:', this.canvasHeight);
-    console.log('Max particles:', this.maxParticles);
-    
+    // Eliminar logs innecesarios para mejorar rendimiento
     this.initializeCanvas();
     this.loadSVGSprites();
     this.setupEventListeners();
     
-    // Forzar inicialización del sistema de partículas para testing
-    setTimeout(() => {
-      console.log('⏰ Forzando inicialización de partículas...');
-      this.initializeWaveSystem();
-      this.initializeParticleSystem();
-      console.log('Partículas creadas:', this.particles.length);
-    }, 1000);
+    // Inicializar sistemas inmediatamente
+    this.initializeWaveSystem();
+    this.initializeParticleSystem();
   }
   
   ngOnDestroy(): void {
@@ -563,21 +556,12 @@ export class GameCanvasComponent implements AfterViewInit, OnDestroy {
    * Renderizar frame completo
    */
   private render(): void {
-    console.log('🎬 Renderizando frame...');
+    // Eliminar console.logs para mejorar rendimiento
     this.clearCanvas();
-    console.log('🧹 Canvas limpiado');
-    
     this.renderZenWaves();
-    console.log('🌊 Ondas zen renderizadas');
-    
     this.renderParticles();
-    console.log('✨ Partículas renderizadas:', this.particles.length);
-    
     this.renderGameObjects();
-    console.log('🎮 Objetos de juego renderizados');
-    
     this.renderIdleOverlay();
-    console.log('💤 Overlay idle renderizado');
     
     this.renderHUD();
     console.log('📊 HUD renderizado');
@@ -827,7 +811,7 @@ export class GameCanvasComponent implements AfterViewInit, OnDestroy {
    * Renderizar partículas inside-out vortex
    */
   private renderParticles(): void {
-    console.log('🎨 Renderizando', this.particles.length, 'partículas');
+    // Eliminar console.logs para mejorar rendimiento
     
     // También mostrar partículas en menú (menos intensas)
     const playing = this.isPlaying();
@@ -868,7 +852,8 @@ export class GameCanvasComponent implements AfterViewInit, OnDestroy {
       renderedCount++;
     }
     
-    console.log('✅ Partículas renderizadas:', renderedCount, 'usando sprites SVG');
+    // Actualizar el contador de partículas sin usar console.log
+    this.particleCount.set(renderedCount);
     
     this.effectsCtx.globalCompositeOperation = 'source-over';
     this.effectsCtx.globalAlpha = 1.0;
