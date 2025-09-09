@@ -1,0 +1,63 @@
+<!-- Zen Flow Power-ups - Energy Orbs -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100" width="300" height="100">
+  <defs>
+    <radialGradient id="energyGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#4ECDC4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00B894;stop-opacity:0.3" />
+    </radialGradient>
+    <radialGradient id="scoreGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FFD93D;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F39C12;stop-opacity:0.3" />
+    </radialGradient>
+    <radialGradient id="shieldGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#6C5CE7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#A29BFE;stop-opacity:0.3" />
+    </radialGradient>
+    <radialGradient id="zenGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#A8E6CF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#74B49B;stop-opacity:0.3" />
+    </radialGradient>
+    <radialGradient id="multiplierGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FF8B94;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF6B6B;stop-opacity:0.3" />
+    </radialGradient>
+    <filter id="sparkle">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Energy Power-up -->
+  <g id="energy-powerup">
+    <circle cx="30" cy="50" r="18" fill="url(#energyGlow)" filter="url(#sparkle)"/>
+    <path d="M25 45 L30 35 L32 45 L35 40 L30 50 L28 45 L25 50 Z" fill="#FFF" opacity="0.9"/>
+  </g>
+  
+  <!-- Score Power-up -->
+  <g id="score-powerup">
+    <circle cx="90" cy="50" r="15" fill="url(#scoreGlow)" filter="url(#sparkle)"/>
+    <text x="90" y="55" text-anchor="middle" font-family="Arial" font-size="16" font-weight="bold" fill="#FFF">★</text>
+  </g>
+  
+  <!-- Shield Power-up -->
+  <g id="shield-powerup">
+    <circle cx="150" cy="50" r="20" fill="url(#shieldGlow)" filter="url(#sparkle)"/>
+    <path d="M140 45 Q150 35 160 45 Q155 55 150 60 Q145 55 140 45 Z" fill="#FFF" opacity="0.9"/>
+  </g>
+  
+  <!-- Zen Power-up -->
+  <g id="zen-powerup">
+    <circle cx="210" cy="50" r="22" fill="url(#zenGlow)" filter="url(#sparkle)"/>
+    <circle cx="210" cy="50" r="12" fill="none" stroke="#FFF" stroke-width="2" opacity="0.8"/>
+    <circle cx="210" cy="50" r="6" fill="#FFF" opacity="0.9"/>
+  </g>
+  
+  <!-- Multiplier Power-up -->
+  <g id="multiplier-powerup">
+    <circle cx="270" cy="50" r="18" fill="url(#multiplierGlow)" filter="url(#sparkle)"/>
+    <text x="270" y="58" text-anchor="middle" font-family="Arial" font-size="20" font-weight="bold" fill="#FFF">×</text>
+  </g>
+</svg>

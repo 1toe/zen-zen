@@ -1,1 +1,145 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global Zen Flow Styles */
+/* Paleta Washed Paper + Nocturna */
+:root {
+	--color-paper-top: #F5F3EB;
+	--color-paper-bottom: #E9E6DE;
+	--color-ink-soft: #4a4a4a;
+	--color-ink-fade: rgba(0,0,0,0.35);
+	--color-night-top: #0f1624;
+	--color-night-bottom: #16213e;
+	--color-accent-zen: #4ECDC4;
+	--color-accent-warm: #FF6B6B;
+	--color-accent-gold: #FFD93D;
+	--radius-lg: 16px;
+	--radius-md: 10px;
+	--radius-sm: 6px;
+	--shadow-soft: 0 4px 18px -4px rgba(0,0,0,0.15), 0 2px 6px -2px rgba(0,0,0,0.1);
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin:0; padding:0; }
+body {
+	font-family: 'Inter', system-ui, Avenir, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+	background: linear-gradient(to bottom,var(--color-paper-top), var(--color-paper-bottom));
+	color: var(--color-ink-soft);
+	-webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar minimal */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 50px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.28); }
+
+/* Utilidades */
+.glass {
+	background: linear-gradient(135deg, rgba(255,255,255,0.35), rgba(255,255,255,0.15));
+	backdrop-filter: blur(14px) saturate(140%);
+	-webkit-backdrop-filter: blur(14px) saturate(140%);
+	border: 1px solid rgba(255,255,255,0.35);
+	box-shadow: var(--shadow-soft);
+	border-radius: var(--radius-lg);
+}
+
+.btn-zen {
+	position: relative;
+	border: none;
+	padding: 0.75rem 1.4rem;
+	font-weight: 600;
+	letter-spacing: .5px;
+	color: #fff;
+	background: linear-gradient(90deg,var(--color-accent-zen),#2E8B7E);
+	border-radius: 40px;
+	cursor: pointer;
+	box-shadow: 0 4px 14px -4px rgba(0,0,0,.3);
+	transition: transform .25s, box-shadow .25s, filter .25s;
+}
+.btn-zen:hover { transform: translateY(-3px); box-shadow: 0 8px 22px -6px rgba(0,0,0,.4); }
+.btn-zen:active { transform: translateY(0); }
+.btn-zen.is-alt { background: linear-gradient(90deg,#FF8B94,#FF6B6B); }
+.btn-zen.is-outline { background: transparent; color: var(--color-accent-zen); border:2px solid var(--color-accent-zen); }
+
+/* Layout contenedor del juego */
+.zen-flow-container {
+	display: flex;
+	flex-direction: column;
+	max-width: 1220px;
+	margin: 0 auto;
+	padding: 1.25rem 1.25rem 2.5rem;
+	gap: 1.25rem;
+	min-height: 100dvh;
+}
+
+.game-header {
+	display:flex;
+	flex-direction: column;
+	align-items: center;
+	gap:.4rem;
+	padding: 1.25rem 1rem 1.4rem;
+	border-radius: var(--radius-lg);
+	background: linear-gradient(130deg, var(--color-night-top), var(--color-night-bottom));
+	color: #fff;
+	box-shadow: 0 6px 22px -8px rgba(0,0,0,.55);
+}
+.game-header h1 { margin:0; font-size: clamp(1.8rem, 4vw, 2.85rem); font-weight: 500; letter-spacing: -1px; }
+.game-info { display:flex; gap:1.25rem; font-size:.85rem; opacity:.85; }
+
+.game-main {
+	display:grid;
+	grid-template-columns: minmax(260px,320px) 1fr;
+	gap:1.5rem;
+	width:100%;
+	align-items: start;
+}
+
+.player-info {
+	position: sticky;
+	top:1rem;
+	display:flex;
+	flex-direction: column;
+	gap:.65rem;
+	padding:1.1rem 1.1rem 1.2rem;
+	font-size:.85rem;
+	line-height:1.15rem;
+	border-radius: var(--radius-lg);
+	background: linear-gradient(140deg, rgba(255,255,255,.75), rgba(255,255,255,.35));
+	backdrop-filter: blur(10px) saturate(150%);
+	box-shadow:0 4px 16px -6px rgba(0,0,0,.28);
+	border:1px solid rgba(255,255,255,.55);
+}
+.player-info .stat { display:flex; justify-content: space-between; align-items: center; padding:.25rem 0; border-bottom:1px dashed rgba(0,0,0,.1); }
+.player-info .stat:last-child { border-bottom:none; }
+.player-info label { font-weight:600; letter-spacing:.3px; }
+
+.game-controls { display:flex; flex-wrap: wrap; gap:.75rem; margin-top:1rem; }
+.game-controls button { 
+	position: relative;
+	border: none;
+	padding: 0.65rem 1.2rem;
+	font-weight: 600;
+	letter-spacing: .4px;
+	color: #fff;
+	background: linear-gradient(90deg,var(--color-accent-zen),#2E8B7E);
+	border-radius: 40px;
+	cursor: pointer;
+	box-shadow: 0 4px 14px -4px rgba(0,0,0,.3);
+	transition: transform .25s, box-shadow .25s, filter .25s;
+}
+.game-controls button:hover { transform: translateY(-3px); box-shadow: 0 8px 22px -6px rgba(0,0,0,.4); }
+.game-controls button:active { transform: translateY(0); }
+
+.canvas-container { width:100%; height:100%; }
+
+.game-footer { text-align:center; font-size:.7rem; opacity:.7; padding:.75rem 0 0; }
+
+@media (max-width: 1024px){
+	.game-main { grid-template-columns: 1fr; }
+	.player-info { position:relative; top:0; order:2; }
+}
+
+@media (max-width: 640px){
+	.zen-flow-container { padding: .75rem .75rem 2rem; }
+	.game-controls { justify-content: center; }
+	.player-info { flex-direction: row; flex-wrap: wrap; }
+	.player-info .stat { width: calc(50% - .5rem); }
+}

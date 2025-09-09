@@ -1,44 +1,59 @@
-import { GameMode, Difficulty } from './game-state.enum';
+import { GameMode, Difficulty, EnergyType } from './game-state.enum';
 import { Size } from './player.model';
 
 /**
  * Configuración de física del juego
  */
 export interface PhysicsConfig {
-  /** Gravedad aplicada al jugador */
+  /** Gravedad aplicada al núcleo (0 para desactivar) */
   gravity: number;
   
   /** Fricción para el movimiento */
   friction: number;
   
-  /** Velocidad máxima del jugador */
+  /** Velocidad máxima del núcleo */
   maxSpeed: number;
   
-  /** Fuerza de impulso del jugador */
+  /** Fuerza de impulso del núcleo */
   impulseForce: number;
   
   /** Amortiguación de velocidad */
   damping: number;
+  
+  /** Velocidad de propagación de ondas base */
+  waveSpeed: number;
+  
+  /** Distancia máxima de propagación de ondas */
+  maxWaveDistance: number;
 }
 
 /**
  * Configuración de generación de objetos
  */
 export interface SpawningConfig {
-  /** Tasa de aparición de obstáculos (obstáculos/segundo) */
-  obstacleRate: number;
+  /** Tasa de aparición de disonancias (disonancias/segundo) */
+  dissonanceRate: number;
   
-  /** Tasa de aparición de power-ups (power-ups/segundo) */
-  powerUpRate: number;
+  /** Tasa de aparición de amplificadores (amplificadores/segundo) */
+  amplifierRate: number;
   
-  /** Distancia mínima entre obstáculos */
-  minObstacleDistance: number;
+  /** Tiempo entre generación de patrones (segundos) */
+  patternInterval: number;
   
-  /** Número máximo de obstáculos simultáneos */
-  maxObstacles: number;
+  /** Número máximo de disonancias simultáneas */
+  maxDissonances: number;
   
-  /** Número máximo de power-ups simultáneos */
-  maxPowerUps: number;
+  /** Número máximo de amplificadores simultáneos */
+  maxAmplifiers: number;
+  
+  /** Número de resonadores iniciales */
+  initialResonators: number;
+  
+  /** Número máximo de resonadores */
+  maxResonators: number;
+  
+  /** Número máximo de ondas armónicas simultáneas */
+  maxHarmonicWaves: number;
 }
 
 /**
@@ -66,7 +81,14 @@ export interface RenderConfig {
     bloom: boolean;
     trails: boolean;
     screenShake: boolean;
+    waveGlow: boolean;
   };
+  
+  /** Intensidad de brillo global (0-1) */
+  brightness: number;
+  
+  /** Escala de objetos (1 es tamaño normal) */
+  scale: number;
 }
 
 /**
@@ -84,6 +106,33 @@ export interface AudioConfig {
   
   /** Si el audio está habilitado */
   enabled: boolean;
+  
+  /** Armonía musical activada (adapta la música al juego) */
+  musicalHarmony: boolean;
+}
+
+/**
+ * Configuración de energía
+ */
+export interface EnergyConfig {
+  /** Balance inicial entre energías */
+  initialBalance: {
+    [EnergyType.CALM]: number;
+    [EnergyType.VIBRANT]: number;
+    [EnergyType.INTENSE]: number;
+  };
+  
+  /** Tasa de decaimiento natural de energía */
+  decayRate: number;
+  
+  /** Umbral de desbalance que causa efectos negativos (0-1) */
+  imbalanceThreshold: number;
+  
+  /** Penalización por desbalance extremo */
+  imbalancePenalty: number;
+  
+  /** Bonificación por balance perfecto */
+  balanceBonus: number;
 }
 
 /**
@@ -99,105 +148,139 @@ export interface GameConfig {
   /** Configuración de física */
   physics: PhysicsConfig;
   
-  /** Configuración de generación */
+  /** Configuración de generación de objetos */
   spawning: SpawningConfig;
   
-  /** Configuración de renderizado */
-  render: RenderConfig;
+  /** Configuración visual */
+  rendering: RenderConfig;
   
   /** Configuración de audio */
   audio: AudioConfig;
   
-  /** Configuraciones específicas del modo meditación */
-  meditation: {
-    visualCalmness: number; // 0-1, qué tan calmados son los visuales
-    obstacleReduction: number; // 0-1, reducción de obstáculos
-    gentleColors: boolean; // Usar colores suaves
-  };
+  /** Configuración de energía */
+  energy: EnergyConfig;
+  
+  /** Si el modo de depuración está activo */
+  debugMode: boolean;
 }
 
 /**
- * Factory para crear configuración por defecto
+ * Crear configuración por defecto
  */
 export function createDefaultGameConfig(): GameConfig {
   return {
-    difficulty: Difficulty.NORMAL,
-    mode: GameMode.NORMAL,
+    difficulty: Difficulty.ADEPT,
+    mode: GameMode.HARMONY,
     physics: {
-      gravity: 0.5,
+      gravity: 0,
       friction: 0.98,
-      maxSpeed: 8,
-      impulseForce: 12,
-      damping: 0.95
+      maxSpeed: 5,
+      impulseForce: 0.5,
+      damping: 0.95,
+      waveSpeed: 120,
+      maxWaveDistance: 300
     },
     spawning: {
-      obstacleRate: 0.8,
-      powerUpRate: 0.3,
-      minObstacleDistance: 100,
-      maxObstacles: 15,
-      maxPowerUps: 5
+      dissonanceRate: 0.3,
+      amplifierRate: 0.15,
+      patternInterval: 20,
+      maxDissonances: 5,
+      maxAmplifiers: 3,
+      initialResonators: 5,
+      maxResonators: 12,
+      maxHarmonicWaves: 10
     },
-    render: {
+    rendering: {
       targetFPS: 60,
-      canvasSize: { width: 800, height: 600 },
-      backgroundColor: '#1a1a2e',
+      canvasSize: { width: 550, height: 550 },
+      backgroundColor: '#1e1e2e',
       particles: {
         enabled: true,
-        maxCount: 100,
+        maxCount: 2000,
         fadeSpeed: 0.02
       },
       effects: {
         bloom: true,
         trails: true,
-        screenShake: false
-      }
+        screenShake: true,
+        waveGlow: true
+      },
+      brightness: 0.8,
+      scale: 1.0
     },
     audio: {
-      masterVolume: 0.7,
-      sfxVolume: 0.8,
+      masterVolume: 0.8,
+      sfxVolume: 0.7,
       musicVolume: 0.5,
-      enabled: true
+      enabled: true,
+      musicalHarmony: true
     },
-    meditation: {
-      visualCalmness: 0.7,
-      obstacleReduction: 0.6,
-      gentleColors: true
-    }
+    energy: {
+      initialBalance: {
+        [EnergyType.CALM]: 33,
+        [EnergyType.VIBRANT]: 33,
+        [EnergyType.INTENSE]: 34
+      },
+      decayRate: 0.1,
+      imbalanceThreshold: 0.3,
+      imbalancePenalty: 5,
+      balanceBonus: 2
+    },
+    debugMode: false
   };
 }
 
 /**
- * Crear configuración específica para modo meditación
+ * Crear configuración para modo Armonía (enfocado en experiencia zen)
  */
-export function createMeditationConfig(): GameConfig {
+export function createHarmonyConfig(): GameConfig {
   const config = createDefaultGameConfig();
+  config.mode = GameMode.HARMONY;
+  config.physics.gravity = 0;
+  config.physics.friction = 0.99;
+  config.physics.damping = 0.98;
+  config.spawning.dissonanceRate = 0.1;
+  config.spawning.amplifierRate = 0.2;
+  config.rendering.backgroundColor = '#24273a';
+  config.rendering.effects.screenShake = false;
+  config.energy.decayRate = 0.05;
   
-  return {
-    ...config,
-    mode: GameMode.MEDITATION,
-    physics: {
-      ...config.physics,
-      gravity: 0.3,
-      maxSpeed: 5,
-      impulseForce: 8
-    },
-    spawning: {
-      ...config.spawning,
-      obstacleRate: 0.4,
-      powerUpRate: 0.5
-    },
-    render: {
-      ...config.render,
-      backgroundColor: '#2c3e50',
-      effects: {
-        ...config.render.effects,
-        screenShake: false
-      }
-    },
-    meditation: {
-      visualCalmness: 0.9,
-      obstacleReduction: 0.8,
-      gentleColors: true
-    }
-  };
+  return config;
 }
+
+/**
+ * Crear configuración para modo Resonancia (enfocado en completar patrones)
+ */
+export function createResonanceConfig(): GameConfig {
+  const config = createDefaultGameConfig();
+  config.mode = GameMode.RESONANCE;
+  config.physics.waveSpeed = 150;
+  config.spawning.patternInterval = 15;
+  config.spawning.initialResonators = 8;
+  config.spawning.maxResonators = 15;
+  config.rendering.backgroundColor = '#181825';
+  config.energy.decayRate = 0.15;
+  
+  return config;
+}
+
+/**
+ * Crear configuración para modo Equilibrio (enfocado en mantener balance energético)
+ */
+export function createBalanceConfig(): GameConfig {
+  const config = createDefaultGameConfig();
+  config.mode = GameMode.BALANCE;
+  config.energy.imbalanceThreshold = 0.2;
+  config.energy.imbalancePenalty = 8;
+  config.energy.balanceBonus = 5;
+  config.energy.decayRate = 0.2;
+  config.spawning.dissonanceRate = 0.4;
+  config.rendering.backgroundColor = '#11111b';
+  
+  return config;
+}
+
+/**
+ * Alias para mantener compatibilidad con código existente
+ */
+export const createMeditationConfig = createHarmonyConfig;

@@ -1,12 +1,3 @@
 Workflow
 RFCs
 RFCs Implemented
-feat: implement core game models and services for Zen Flow
-
-- Added GameState, GameMode, Difficulty, and GameEvent enums to manage game states and events.
-- Created player, obstacle, and power-up models with factory functions for instantiation.
-- Developed GameEngineService to handle game logic, state management, and event emission.
-- Implemented game loop and state updates, including player input handling and collision detection.
-- Established unit tests for models and services to ensure functionality and reliability.
-- Set up initial application structure with index.html, main.ts, and styles.css.
-- Configured TypeScript settings for the application and tests.

@@ -1,0 +1,56 @@
+.canvas-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  min-height: 550px;
+  background: linear-gradient(135deg, var(--color-paper-top) 0%, var(--color-paper-bottom) 100%);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: inset 0 4px 20px rgba(0,0,0,0.08), 0 6px 18px -8px rgba(0,0,0,.25);
+  transition: background 1.2s ease;
+}
+.canvas-container.playing {
+  background: radial-gradient(circle at 50% 45%, #1f2d45 0%, #141c2b 55%, #0c121c 100%);
+}
+.game-canvas, .effects-canvas {
+  position: absolute;
+  border-radius: 8px;
+  cursor: pointer;
+  image-rendering: optimizeQuality;
+  touch-action: none; /* Evita gestos por defecto y warnings passive */
+  -ms-touch-action: none;
+}
+.game-canvas { z-index: 2; background: transparent; }
+.effects-canvas { z-index: 1; background: transparent; }
+.touch-controls { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 3; }
+.touch-area {
+  background: linear-gradient(135deg, rgba(168,230,207,0.28), rgba(168,230,207,0.15));
+  border: 2px solid rgba(168,230,207,0.45);
+  border-radius: 50px;
+  padding: 15px 30px;
+  backdrop-filter: blur(10px) saturate(160%);
+  -webkit-backdrop-filter: blur(10px) saturate(160%);
+  text-align: center;
+  user-select: none;
+  transition: all 0.35s ease;
+  box-shadow: 0 4px 18px -6px rgba(0,0,0,.4), inset 0 0 22px -6px rgba(168,230,207,.65);
+}
+.touch-area:active { background: rgba(168,230,207,0.45); transform: scale(.96); }
+.touch-hint { color: #E9FFF8; font-size: 14px; font-weight: 500; letter-spacing: .5px; text-shadow: 0 1px 2px rgba(0,0,0,.45); }
+.debug-info {
+  position: absolute; top: 10px; left: 10px; background: rgba(10,15,22,0.72);
+  color: #CFEFE7; padding: 10px 12px; border-radius: 6px; font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; line-height: 1.1rem; z-index: 4; letter-spacing: .5px; backdrop-filter: blur(6px);
+  box-shadow: 0 4px 14px -6px rgba(0,0,0,.5), inset 0 0 0 1px rgba(255,255,255,0.05);
+}
+.debug-info div { margin: 2px 0; opacity: .9; }
+@media (max-width: 860px){
+  .canvas-container { min-height: 520px; }
+}
+@media (max-width: 640px){
+  .canvas-container { min-height: 480px; }
+  .debug-info { font-size: 10px; }
+}

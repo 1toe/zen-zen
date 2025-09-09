@@ -1,98 +1,181 @@
 import { Position, Size, Velocity } from './player.model';
+import { EnergyType } from './game-state.enum';
 
 /**
- * Tipos de obstáculos disponibles en Zen Flow
+ * Tipos de disonancias disponibles en Zen Harmonics
  */
-export type ObstacleType = 'static' | 'moving' | 'rotating' | 'pulsing';
+export type DissonanceType = 'static' | 'moving' | 'pulsating' | 'disruptive';
 
 /**
- * Formas geométricas de obstáculos
+ * Formas de las disonancias
  */
-export type ObstacleShape = 'circle' | 'rectangle' | 'triangle' | 'ring';
+export type DissonanceShape = 'circle' | 'square' | 'triangle' | 'irregular' | 'rectangle' | 'ring';
 
 /**
- * Modelo de obstáculo en Zen Flow
- * Los obstáculos aparecen en patrones concéntricos
+ * Modelo de disonancia (obstáculo) en Zen Harmonics
+ * Las disonancias perturban la armonía y dificultan la conexión entre resonadores
  */
-export interface Obstacle {
-  /** Identificador único del obstáculo */
+export interface Dissonance {
+  /** Identificador único de la disonancia */
   id: string;
   
-  /** Tipo de comportamiento del obstáculo */
-  type: ObstacleType;
+  /** Tipo de comportamiento de la disonancia */
+  type: DissonanceType;
   
-  /** Forma geométrica del obstáculo */
-  shape: ObstacleShape;
+  /** Forma de la disonancia */
+  shape: DissonanceShape;
   
   /** Posición actual en el canvas */
   position: Position;
   
-  /** Tamaño del obstáculo */
+  /** Tamaño de la disonancia */
   size: Size;
   
-  /** Velocidad de movimiento (para obstáculos móviles) */
+  /** Velocidad de movimiento (para disonancias móviles) */
   velocity?: Velocity;
   
-  /** Velocidad de rotación en radianes/frame (para obstáculos rotativos) */
+  /** Tipo de energía que contrarresta esta disonancia */
+  countersEnergy: EnergyType;
+  
+  /** Velocidad de rotación en radianes/frame (para disonancias rotativas) */
   rotationSpeed?: number;
   
   /** Ángulo de rotación actual en radianes */
   rotation: number;
   
-  /** Daño que causa al jugador al colisionar */
-  damage: number;
+  /** Disrupción que causa a la armonía (daño) */
+  disruptionLevel: number;
   
-  /** Radio para obstáculos circulares o radio de colisión */
+  /** Radio para disonancias circulares o radio de colisión */
   radius?: number;
   
-  /** Color del obstáculo en formato hex */
+  /** Color de la disonancia en formato hex */
   color: string;
   
-  /** Opacidad del obstáculo (0-1) */
+  /** Opacidad de la disonancia (0-1) */
   opacity: number;
   
-  /** Tiempo de vida del obstáculo (para obstáculos temporales) */
+  /** Frecuencia de pulsación para disonancias pulsantes */
+  pulseFrequency?: number;
+  
+  /** Tiempo de vida de la disonancia (ms) */
   lifeTime?: number;
   
-  /** Si el obstáculo está activo */
+  /** Tiempo transcurrido desde su creación */
+  age: number;
+  
+  /** Si la disonancia está activa */
   isActive: boolean;
+  
+  /** Afecta a la energía específica */
+  affectsEnergyType?: EnergyType;
 }
 
 /**
- * Factory para crear un obstáculo con valores por defecto
+ * Factory para crear una disonancia con valores por defecto
  */
-export function createObstacle(overrides: Partial<Obstacle> = {}): Obstacle {
+export function createDissonance(overrides: Partial<Dissonance> = {}): Dissonance {
   return {
     id: crypto.randomUUID(),
     type: 'static',
-    shape: 'rectangle',
+    shape: 'circle',
     position: { x: 0, y: 0 },
-    size: { width: 50, height: 50 },
+    size: { width: 30, height: 30 },
     rotation: 0,
-    damage: 10,
+    disruptionLevel: 10,
     color: '#ff6b6b',
     opacity: 0.8,
+    countersEnergy: EnergyType.CALM,
+    age: 0,
     isActive: true,
     ...overrides
   };
 }
 
 /**
- * Configuración para generar obstáculos en patrones
+ * Modelo de resonador - elementos que deben ser conectados con ondas armónicas
  */
-export interface ObstaclePattern {
-  /** Tipo de patrón */
-  type: 'concentric' | 'spiral' | 'wave' | 'cluster';
+export interface Resonator {
+  /** Identificador único del resonador */
+  id: string;
   
-  /** Número de obstáculos en el patrón */
+  /** Posición en el canvas */
+  position: Position;
+  
+  /** Radio del resonador */
+  radius: number;
+  
+  /** Tipo de energía que requiere para activarse */
+  energyType: EnergyType;
+  
+  /** Estado de activación */
+  isActivated: boolean;
+  
+  /** Conexiones activas con otros resonadores */
+  connections: string[];
+  
+  /** Color del resonador en formato hex */
+  color: string;
+  
+  /** Brillo/intensidad (0-1) */
+  intensity: number;
+  
+  /** Frecuencia de resonancia */
+  frequency: number;
+  
+  /** Si está actualmente recibiendo energía */
+  isReceivingEnergy: boolean;
+}
+
+/**
+ * Factory para crear un resonador
+ */
+export function createResonator(position: Position, energyType: EnergyType, overrides: Partial<Resonator> = {}): Resonator {
+  // Asignar color según el tipo de energía
+  const colorMap: Record<EnergyType, string> = {
+    [EnergyType.CALM]: '#4ecdc4',     // Turquesa/azul
+    [EnergyType.VIBRANT]: '#a8e6cf',  // Verde claro
+    [EnergyType.INTENSE]: '#ff8c94',  // Rojo/rosa suave
+    [EnergyType.HARMONIC]: '#c5a3ff'  // Púrpura
+  };
+  
+  return {
+    id: crypto.randomUUID(),
+    position,
+    radius: 20,
+    energyType,
+    isActivated: false,
+    connections: [],
+    color: colorMap[energyType],
+    intensity: 0.5,
+    frequency: 1.0,
+    isReceivingEnergy: false,
+    ...overrides
+  };
+}
+
+/**
+ * Configuración para generar patrones de resonadores
+ */
+export interface ResonatorPattern {
+  /** Tipo de patrón */
+  type: 'circle' | 'grid' | 'mandala' | 'spiral';
+  
+  /** Número de resonadores en el patrón */
   count: number;
+  
+  /** Disposición de tipos de energía */
+  energyTypes: EnergyType[];
   
   /** Radio base para patrones circulares */
   radius: number;
   
-  /** Espaciado entre obstáculos */
-  spacing: number;
-  
-  /** Velocidad del patrón */
-  speed: number;
+  /** Rotación del patrón completo en radianes */
+  rotation: number;
 }
+
+/**
+ * Alias para mantener compatibilidad con código existente
+ */
+export type Obstacle = Dissonance;
+export const createObstacle = createDissonance;

@@ -24,10 +24,9 @@ import {
 
 // Tipos utilizados en este servicio
 export type DissonanceType = 'static' | 'moving' | 'pulsating' | 'disruptive';
-export type DissonanceShape = 'circle' | 'square' | 'triangle' | 'irregular' | 'rectangle' | 'ring';
+export type DissonanceShape = 'circle' | 'square' | 'triangle' | 'irregular';
 export type HarmonyAmplifierType = 'energy' | 'frequency' | 'amplitude' | 'resonance' | 
-                                 'balance' | 'clarity' | 'expansion' | 'stability' |
-                                 'zen' | 'multipler';
+                                 'balance' | 'clarity' | 'expansion' | 'stability';
 
 /**
  * Servicio principal del motor de juego Zen Harmonics
@@ -49,16 +48,6 @@ export class GameEngineService implements OnDestroy {
   private _amplifiers = signal<HarmonyAmplifier[]>([]);
   private _config = signal<GameConfig>(createDefaultGameConfig());
   private _fps = signal<number>(0);
-  
-  // Añadimos el player para compatibilidad
-  private _player = signal<any>({
-    position: { x: 0, y: 0 },
-    velocity: { x: 0, y: 0 },
-    radius: 15,
-    color: '#3498db',
-    energy: 100,
-    score: 0
-  });
   private _deltaTime = signal<number>(0);
   private _score = signal<number>(0);
   private _harmonicPatterns = signal<HarmonicPattern[]>([]);
@@ -85,18 +74,6 @@ export class GameEngineService implements OnDestroy {
   public readonly deltaTime = this._deltaTime.asReadonly();
   public readonly score = this._score.asReadonly();
   public readonly harmonicPatterns = this._harmonicPatterns.asReadonly();
-  public readonly player = this._player.asReadonly();
-  public readonly obstacles = signal<any[]>([]).asReadonly(); // Para compatibilidad
-  
-  // Mapear amplifiers a powerups para compatibilidad
-  public readonly powerUps = computed(() => {
-    return this._amplifiers().map(amp => ({
-      ...amp,
-      effect: 'glow', // Asegurar que effect es siempre un string
-      animationSpeed: 1.0, // Asegurar que animationSpeed es siempre un número
-      description: amp.description || `Amplificador de ${amp.type}`
-    }));
-  });
   
   // Computed signals
   public readonly isPlaying = computed(() => this._gameState() === GameState.PLAYING);
@@ -141,15 +118,6 @@ export class GameEngineService implements OnDestroy {
     this._gameState.set(GameState.MENU);
     this._score.set(0);
     
-    // Añadimos player para compatibilidad
-    this._player.set({
-      position: { x: 400, y: 300 },
-      velocity: { x: 0, y: 0 },
-      radius: 15,
-      color: '#3498db',
-      energy: 100,
-      score: 0
-    });
     this.emitGameEvent(GameEvent.GAME_STARTED, { 
       mode: this._config().mode,
       difficulty: this._config().difficulty 
@@ -593,8 +561,7 @@ export class GameEngineService implements OnDestroy {
     const colors = {
       [EnergyType.CALM]: '#ff6b6b',     // Rojo (contrario a azul/calma)
       [EnergyType.VIBRANT]: '#9775fa',  // Púrpura (contrario a verde/vibración)
-      [EnergyType.INTENSE]: '#4ecdc4',   // Turquesa (contrario a rojo/intensidad)
-      [EnergyType.HARMONIC]: '#c5a3ff'   // Púrpura (para energía harmónica)
+      [EnergyType.INTENSE]: '#4ecdc4'   // Turquesa (contrario a rojo/intensidad)
     };
     
     dissonanceProps.color = colors[countersEnergy];
@@ -1018,30 +985,5 @@ export class GameEngineService implements OnDestroy {
       timestamp: Date.now(),
       data
     });
-  }
-  
-  /**
-   * Maneja la entrada del jugador (para compatibilidad)
-   */
-  public handlePlayerInput(): void {
-    // Método para compatibilidad
-  }
-  
-  /**
-   * Pausa el juego
-   */
-  public pauseGame(): void {
-    if (this._gameState() === GameState.PLAYING) {
-      this._gameState.set(GameState.PAUSED);
-    }
-  }
-  
-  /**
-   * Reanuda el juego
-   */
-  public resumeGame(): void {
-    if (this._gameState() === GameState.PAUSED) {
-      this._gameState.set(GameState.PLAYING);
-    }
   }
 }

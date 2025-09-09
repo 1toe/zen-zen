@@ -4,6 +4,35 @@ export * from './obstacle.model';
 export * from './powerup.model';
 export * from './game-state.enum';
 export * from './game-config.model';
+export * from './wave.model';
+
+// Export harmonics model (with explicit exports to avoid ambiguity)
+export type {
+  HarmonicResonator,
+  HarmonicCore,
+  Dissonance,
+  HarmonyAmplifier
+} from './harmonics.model';
+
+export {
+  createHarmonicResonator,
+  createHarmonicCore,
+  createDissonance,
+  createHarmonyAmplifier
+} from './harmonics.model';
+
+// Export harmonic waves model
+export type {
+  HarmonicWave,
+  ResonatorConnection,
+  HarmonicPattern
+} from './harmonic-waves.model';
+
+export {
+  createHarmonicWave,
+  createResonatorConnection,
+  createHarmonicPattern
+} from './harmonic-waves.model';
 
 // Utility types
 export interface Point {
